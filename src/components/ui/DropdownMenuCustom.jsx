@@ -1,6 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { twMerge } from 'tailwind-merge';
 
 function DropdownMenuCustom({trigger, items}) {
+  const baseItemClasses = "group text-sm leading-none rounded-md flex items-center h-8 px-2 relative pl-7 select-none data-[disabled]:text-gray-400 data-[highlighted]:bg-blue-500 data-[highlighted]:text-white outline-none cursor-pointer";
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -10,13 +12,11 @@ function DropdownMenuCustom({trigger, items}) {
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="min-w-[120px] bg-card rounded-md p-2 shadow-xl border border-border z-50 animate-fadeIn" sideOffset={5}>
           {items.map((item, index) => {
-            if (item.separator) {
-              return <DropdownMenu.Separator key={index} className="h-px bg-gray-200 my-2" />;
-            }
+            const itemClasses = twMerge(baseItemClasses, item.className);
             return (
               <DropdownMenu.Item
                 key={index}
-                className="group text-sm leading-none rounded-md flex items-center h-8 px-2 relative pl-7 select-none data-[disabled]:text-gray-400 data-[highlighted]:bg-blue-500 data-[highlighted]:text-white outline-none cursor-pointer"
+                className={itemClasses}
                 onSelect={item.onSelect}
                 disabled={item.disabled}
               >
