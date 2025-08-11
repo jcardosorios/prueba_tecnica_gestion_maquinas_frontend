@@ -1,6 +1,7 @@
 
 import * as Tabs from "@radix-ui/react-tabs";
 import MaquinaContent from './components/maquinas/MaquinaContent.jsx'
+import { ToastContainer } from 'react-toastify';
 
 const tab_content = [
   {
@@ -51,6 +52,7 @@ function App() {
             ))}
           </Tabs.Root>
         </div>
+        <ToastContainer />
       </main>
       
     </>
