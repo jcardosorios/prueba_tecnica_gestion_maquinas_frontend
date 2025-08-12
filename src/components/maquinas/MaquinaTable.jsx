@@ -1,7 +1,4 @@
-
-import { toast } from 'react-toastify';
 import MaquinaItem from './MaquinaItem'
-
 
 function MaquinaTable({maquinas, onEdit}) {
 

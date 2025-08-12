@@ -1,18 +1,19 @@
 
 import * as Tabs from "@radix-ui/react-tabs";
-import MaquinaContent from './components/maquinas/MaquinaContent.jsx'
+import MaquinaView from './views/MaquinaView'
 import { ToastContainer } from 'react-toastify';
+import TareasView from "./views/TareasView";
 
 const tab_content = [
   {
     name: 'Máquinas',
     value: 'maquinas',
-    content: <MaquinaContent />
+    content: <MaquinaView />
   },
   {
     name: 'Tareas',
     value: 'tareas',
-    content: <div>Contenido del Tab 2</div>
+    content: <TareasView />
   },
   {
     name: 'Producción',
