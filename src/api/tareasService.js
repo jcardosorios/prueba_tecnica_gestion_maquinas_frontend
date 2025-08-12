@@ -6,13 +6,13 @@ export const getTareas = async () => {
   try {
     const { data } = await api.get('/tarea')
     const response = TareasSchema.safeParse(data)
-    console.log(response)
     if(response.success){
       return response.data
     } else {
       throw new Error('Error de validación del esquema de datos.')
     }
   } catch (error) {
+    
     handleErrorsAxios(error)
     throw error;
   }
@@ -20,9 +20,11 @@ export const getTareas = async () => {
 
 export const createTarea = async (nuevaTarea) => {
   try {
+    console.log(nuevaTarea)
     const { data } = await api.post('/tarea', nuevaTarea)
     return data
   } catch (error) {
+    console.log(error)
     handleErrorsAxios(error)
     throw error;
   }

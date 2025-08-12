@@ -1,4 +1,9 @@
+import { clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+
 export const formatCustomDate = (date) => {
+  if(!date) return '--/--/--'
   const day = date.getDate().toString().padStart(2, '0')
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
   const year = date.getFullYear().toString().slice(-2)
@@ -9,6 +14,7 @@ export const formatCustomDate = (date) => {
 };
 
 export const decimalHoursToTime = (decimalHours) => {
+  if(!decimalHours) return '--:--'
   const hours = Math.floor(decimalHours)
   const minutes = Math.round((decimalHours - hours) * 60)
 

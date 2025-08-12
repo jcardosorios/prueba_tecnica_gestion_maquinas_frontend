@@ -116,13 +116,13 @@ function MaquinaCreateForm({ onMutationSuccess, initialData = null }) {
             )}
         </div>
         <div className='flex justify-end gap-3 mt-4'>
-                <Dialog.Close asChild>
-                    <button type='button' className='bg-destructive/80 p-2 rounded-md hover:bg-destructive/90'>
-                        Cancelar
-                    </button>
-                </Dialog.Close>
-                <button type='submit' disabled={isPending} className='bg-ring/80 p-2 rounded-md hover:bg-ring/90'>Guardar</button>
-            </div>
+            <Dialog.Close asChild>
+                <button type='button' className='bg-destructive/80 p-2 rounded-md hover:bg-destructive/90'>
+                    Cancelar
+                </button>
+            </Dialog.Close>
+            <button type='submit' disabled={isPending} className='bg-ring/80 p-2 rounded-md hover:bg-ring/90'>Guardar</button>
+        </div>
     </form>
   )
 }

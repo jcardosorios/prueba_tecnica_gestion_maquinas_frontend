@@ -5,7 +5,7 @@ export const TareaSchema = z.object({
     id_produccion: z.number().int().positive().optional().nullable(),
     id_maquina: z.number().int().positive(),
     fecha_hora_inicio: z.iso.datetime().transform((str) => new Date(str)),
-    fecha_hora_termino: z.iso.datetime().transform((str) => new Date(str)).optional(),
+    fecha_hora_termino: z.iso.datetime().transform((str) => new Date(str)).optional().nullable(),
     tiempo_empleado: z.number().min(0).optional().nullable(),
     tiempo_produccion: z.number().min(0).optional().nullable(),
     estado: z.enum(['PENDIENTE', 'COMPLETADA'])

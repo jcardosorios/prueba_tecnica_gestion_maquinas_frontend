@@ -5,6 +5,7 @@ import {PlusCircledIcon} from '@radix-ui/react-icons'
 import Card from '../components/ui/Card'
 import Modal from '../components/ui/Modal';
 import TareaTable from '../components/tareas/TareaTable'
+import TareaCreateForm from '../components/tareas/TareaCreateForm'
 
 
 function TareasView() {
@@ -56,6 +57,7 @@ function TareasView() {
                 onOpenChange={setIsModalOpen}
                 title={editingTarea ? 'Editar tarea' : 'Agregar tarea'}
             >
+                <TareaCreateForm onMutationSuccess={handleCloseModal}/>
                 {/* <MaquinaCreateForm onMutationSuccess={handleCloseModal} initialData={editingMaquina} /> */}
             </Modal>
         </Card>
