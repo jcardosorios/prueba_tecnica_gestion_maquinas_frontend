@@ -9,16 +9,26 @@ import Modal from '../ui/Modal';
 import MaquinaCreateForm from './MaquinaCreateForm';
 
 function MaquinaContent() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // Estado modal
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    // Estado de edicion
+    const [editingMaquina, setEditingMaquina] = useState(null)
 
+    // Query de obtención de maquinas
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['maquinas'],
         queryFn : getMaquinas
     })
-
+    
     const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
+        setIsModalOpen(false)
+        setEditingMaquina(null)
+    }
+
+    const handleEditMaquina = (maquina) => {
+        setEditingMaquina(maquina);
+        setIsModalOpen(true);
+    }
 
     if (isLoading) {
         return <p>Cargando...</p>
@@ -32,21 +42,24 @@ function MaquinaContent() {
     <Card>
         <h1 className='text-2xl font-semibold'>Máquinas</h1>
         <div className='flex flex-row-reverse'>
-            <Modal
-                open={isModalOpen}
-                onOpenChange={setIsModalOpen}
-                trigger={
-                    <div className='p-2 bg-ring/90 text-sm hover:bg-ring rounded-md flex justify-center items-center gap-2'>
-                        <PlusCircledIcon />
-                        Agregar máquina
-                    </div>
-                }
-                title='Agregar máquina'
+            <button className='p-2 bg-ring/90 text-sm hover:bg-ring rounded-md flex justify-center items-center gap-2'
+                onClick={() => {
+                    setIsModalOpen(true)
+                    setEditingMaquina(null)
+                }}
             >
-                <MaquinaCreateForm onMutationSuccess={handleCloseModal}/>
-            </Modal>
+                <PlusCircledIcon />
+                Agregar máquina
+            </button>
         </div>
-        <MaquinaTable maquinas={data} />
+        <MaquinaTable maquinas={data} onEdit={handleEditMaquina}/>
+        <Modal
+            open={isModalOpen}
+            onOpenChange={setIsModalOpen}
+            title={editingMaquina ? 'Editar máquina' : 'Agregar máquina'}
+        >
+            <MaquinaCreateForm onMutationSuccess={handleCloseModal} initialData={editingMaquina} />
+        </Modal>
     </Card>
   )
 }

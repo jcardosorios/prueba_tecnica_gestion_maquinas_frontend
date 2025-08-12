@@ -18,16 +18,32 @@ export const getMaquinas = async () => {
 };
 
 export const createMaquina = async (nuevaMaquina) => {
-  const response = await api.post('/maquina', nuevaMaquina)
-  return response.data;
+  try {
+    const { data } = await api.post('/maquina', nuevaMaquina)
+    return data
+  } catch (error) {
+    handleErrorsAxios(error)
+    throw error;
+  }
 };
 
-export const updateMaquina = async (id, data) => {
-  const response = await api.put(`/maquina/${id}`, data)
-  return response.data;
+export const updateMaquina = async ({id, formData}) => {
+  try {
+    const { data } = await api.patch(`/maquina/${id}`, formData)
+    return data
+    
+  } catch (error) {
+    handleErrorsAxios(error)
+    throw error;
+  }
 };
 
 export const deleteMaquina = async (id) => {
-  const response = await api.delete(`/maquina/${id}`)
-  return response.data;
+  try {
+    const { data } = await api.delete(`/maquina/${id}`)
+    return data;
+  } catch (error) {
+    handleErrorsAxios(error)
+    throw error;
+  }
 };

@@ -1,9 +1,10 @@
 
+import { toast } from 'react-toastify';
 import MaquinaItem from './MaquinaItem'
 
 
-function MaquinaTable({maquinas}) {
-    
+function MaquinaTable({maquinas, onEdit}) {
+
     return (
     <div className='relative w-full overflow-auto border border-border rounded-md'>
         <table className='w-full caption-bottom text-sm '>
@@ -28,7 +29,7 @@ function MaquinaTable({maquinas}) {
             </thead>
             <tbody className='[&_tr:last-child]:border-0'>
                 {maquinas.map((maquina) => 
-                    <MaquinaItem maquina={maquina} key={maquina.id} />
+                    <MaquinaItem maquina={maquina} key={maquina.id} onEdit={onEdit}/>
                 )}
             </tbody>
         </table>

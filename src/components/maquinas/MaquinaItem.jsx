@@ -2,41 +2,45 @@ import { Pencil1Icon, TrashIcon, DotsHorizontalIcon} from '@radix-ui/react-icons
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DropdownMenuCustom from '../ui/DropdownMenuCustom'
 import { deleteMaquina } from '../../api/maquinasService'
+import { toast } from 'react-toastify';
 
-function MaquinaItem({maquina}) {
+function MaquinaItem({maquina, onEdit}) {
+
+  // Items de menu desplegable
   const menuItems = [
     { 
         label: "Editar", 
         icon: <Pencil1Icon className="h-4 w-4" />,
-        onSelect: () => console.log('Editando maquina:', maquina.id) 
+        onSelect: () => onEdit(maquina) 
     },
     { 
         label: "Eliminar", 
         icon: <TrashIcon className="h-4 w-4" />,
         onSelect: () => {
-        if (window.confirm(`¿Estás seguro de que quieres eliminar la máquina "${maquina.nombre}"?`)) {
+          if (window.confirm(`¿Estás seguro de que quieres eliminar la máquina "${maquina.nombre}"?`)) {
             deleteMutation(maquina.id)
         }
         },
         className: 'text-destructive'
     },
   ];
-  console.log(maquina)
-  const queryClient = useQueryClient()
 
+  // Query para eliminación de máquinas
+  const queryClient = useQueryClient()
   const { mutate: deleteMutation } = useMutation({
     mutationFn: deleteMaquina,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['maquinas'] })
+        toast.success('Máquina eliminada exitosamente')
       },
       onError: (error) => {
-        console.error("Error al eliminar la máquina:", error)
+        toast.error("Error al eliminar la máquina:", error)
       }
   });
 
   return (
     <tr key={maquina.id} className='border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted'>
-      <td className='p-4 align-middle font-medium'>{maquina.id}</td>
+      <td className='p-4 align-middle font-medium '>{maquina.id}</td>
       <td className='p-4 align-middle'>{maquina.nombre}</td>
       <td className='p-4 align-middle'>{maquina.coeficiente}</td>
       <td className='p-4 align-middle text-right'>
