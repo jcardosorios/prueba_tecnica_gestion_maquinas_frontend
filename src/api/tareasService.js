@@ -20,11 +20,9 @@ export const getTareas = async () => {
 
 export const createTarea = async (nuevaTarea) => {
   try {
-    console.log(nuevaTarea)
     const { data } = await api.post('/tarea', nuevaTarea)
     return data
   } catch (error) {
-    console.log(error)
     handleErrorsAxios(error)
     throw error;
   }
@@ -35,6 +33,7 @@ export const updateTarea = async ({id, formData}) => {
     const { data } = await api.patch(`/tarea/${id}`, formData)
     return data
   } catch (error) {
+    console.log(error)
     handleErrorsAxios(error)
     throw error;
   }

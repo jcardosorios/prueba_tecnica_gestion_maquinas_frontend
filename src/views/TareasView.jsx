@@ -57,8 +57,7 @@ function TareasView() {
                 onOpenChange={setIsModalOpen}
                 title={editingTarea ? 'Editar tarea' : 'Agregar tarea'}
             >
-                <TareaCreateForm onMutationSuccess={handleCloseModal}/>
-                {/* <MaquinaCreateForm onMutationSuccess={handleCloseModal} initialData={editingMaquina} /> */}
+                <TareaCreateForm onMutationSuccess={handleCloseModal} initialData={editingTarea}/>
             </Modal>
         </Card>
     )
