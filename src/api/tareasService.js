@@ -33,7 +33,6 @@ export const updateTarea = async ({id, formData}) => {
     const { data } = await api.patch(`/tarea/${id}`, formData)
     return data
   } catch (error) {
-    console.log(error)
     handleErrorsAxios(error)
     throw error;
   }

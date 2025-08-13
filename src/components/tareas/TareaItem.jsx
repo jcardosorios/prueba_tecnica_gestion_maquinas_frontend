@@ -6,6 +6,7 @@ import BadgeCustom from '../ui/BadgeCustom'
 
 
 function TareaItem({tarea, onEdit}) {
+
   return (
     <tr className='border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted'>
       <td className='p-4 align-middle font-medium '>{tarea.id}</td>

@@ -3,6 +3,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import MaquinaView from './views/MaquinaView'
 import { ToastContainer } from 'react-toastify';
 import TareasView from "./views/TareasView";
+import ProduccionView from "./views/ProduccionView";
 
 const tab_content = [
   {
@@ -18,7 +19,7 @@ const tab_content = [
   {
     name: 'Producción',
     value: 'produccion',
-    content: <div>Contenido del Tab 3</div>
+    content: <ProduccionView/>
   },
 ]
 

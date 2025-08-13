@@ -23,7 +23,8 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
   
     const queryClient = useQueryClient()
     const isEditing = !!initialData?.id;
-    // console.log(initialData)
+
+    
     // Valores iniciales
     const initialValue  = {
         id_maquina: initialData?.id_maquina || '',
