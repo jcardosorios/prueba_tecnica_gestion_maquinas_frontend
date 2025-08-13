@@ -288,8 +288,18 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
                             return 'No puede haber hora de término sin fecha de término'
                         }
                         const fechaInicio = getValues("fecha_hora_inicio")
-                        if (value && fechaInicio && value < fechaInicio) {
-                            return 'La fecha de término no puede ser anterior a la fecha de inicio'
+                        if (value && fechaInicio) {
+                            if (value < fechaInicio) {
+                                return 'La fecha de término no puede ser anterior a la fecha de inicio'
+                            }
+                            const timeDiff = value.getTime() - fechaInicio.getTime()
+                            const hoursDiff = timeDiff / (1000 * 60 * 60)
+                            if (hoursDiff < 5) {
+                                return 'La duración no puede ser menor a 5 horas'
+                            }
+                            if (hoursDiff > 120) {
+                                return 'La duración no puede ser mayor a 120 horas'
+                            }
                         }
                     }
                 })} />
