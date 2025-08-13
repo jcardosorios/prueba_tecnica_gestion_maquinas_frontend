@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { format, setHours, setMinutes } from "date-fns"
-import { es, is } from "date-fns/locale"
+import { format, setHours, setMinutes, parse } from "date-fns"
+import { es } from "date-fns/locale"
 import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query"
 import * as Popover from '@radix-ui/react-popover'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -12,6 +12,7 @@ import { getMaquinas } from '../../api/maquinasService'
 import { createTarea, updateTarea } from '../../api/tareasService'
 import Calendar  from '../ui/Calendar';
 import { toast } from 'react-toastify'
+import { getTimeFromDate } from '../../utils/utils'
 
 function TareaCreateForm({ onMutationSuccess, initialData = null }) {
     const [startTimeStr, setStartTimeStr] = useState("")
@@ -29,7 +30,7 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
     const initialValue  = {
         id_maquina: initialData?.id_maquina || '',
         fecha_hora_inicio: initialData?.fecha_hora_inicio || new Date(),
-        fecha_hora_termino: null,
+        fecha_hora_termino: isEditing ? new Date() : null,
         hora_inicio:  null,
         hora_termino: null,
     }
@@ -44,10 +45,16 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
 
     // Valores al cargar pagina
     useEffect(() => {
-        const time = initialData?.fecha_hora_inicio || new Date()
-        const timeString = format(time, "HH:mm")
-        setStartTimeStr(timeString)
-        setValue("hora_inicio", timeString, { shouldValidate: true, shouldDirty: true })
+        const timeString =  getTimeFromDate(new Date())
+        if(isEditing){
+            const startTime = getTimeFromDate(new Date(initialData?.fecha_hora_inicio)) 
+            setStartTimeStr(startTime)
+            setEndTimeStr(timeString)
+            setValue("hora_termino", timeString, { shouldValidate: true, shouldDirty: true })
+        } else {
+            setStartTimeStr(timeString)
+            setValue("hora_inicio", timeString, { shouldValidate: true, shouldDirty: true })
+        }
     }, []);
 
     // MUtacion para crear/editar tareas
@@ -69,17 +76,7 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
 
     // Manejo de cambios en horas
     const handleTimeChange = (field, time) => {
-        if (!time) {
-            if (field === 'fecha_hora_inicio') {
-                setStartTimeStr("")
-                setValue('hora_inicio', null, { shouldValidate: true, shouldDirty: true });
-            } else {
-                setEndTimeStr("")
-                setValue('hora_termino', null, { shouldValidate: true, shouldDirty: true });
-            }
-            setValue(field, null, { shouldValidate: true, shouldDirty: true });
-            return;
-        }
+        console.log(time)
         const [hours, minutes] = time.split(':').map(Number)
         const currentDate = getValues(field)
         const dateToUpdate = currentDate || new Date()
@@ -110,24 +107,24 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
 
     // Manejo de formulario
     const handleForm = (data) => {
-        if (!isEditing) {
+
+        if(isEditing){
             const formData = {
-                id_maquina: data.id_maquina,
-                fecha_hora_inicio: format(data.fecha_hora_inicio, 'yyyy-MM-dd HH:mm:ss')
+                fecha_hora_termino: new Date(data.fecha_hora_termino.setSeconds(0,0))
             }
-            
-            if (data.fecha_hora_termino) {
-                formData['fecha_hora_termino'] = format(data.fecha_hora_termino, 'yyyy-MM-dd HH:mm')
-            }
-            mutate(formData)
+            mutate({id: initialData.id, formData})
             return
         }
 
         const formData = {
-            fecha_hora_termino: format(data.fecha_hora_termino, 'yyyy-MM-dd HH:mm:ss')
+            id_maquina: data.id_maquina,
+            fecha_hora_inicio: new Date(data.fecha_hora_inicio.setSeconds(0,0)),
+            ...(data.fecha_hora_termino && {
+                fecha_hora_termino: data.fecha_hora_termino,
+            }),
         }
-        mutate({id: initialData.id, formData})
-
+        
+        mutate(formData)
     }
 
     return (
@@ -293,8 +290,14 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
                             if (value < fechaInicio) {
                                 return 'La fecha de término no puede ser anterior a la fecha de inicio'
                             }
-                            const timeDiff = value.getTime() - fechaInicio.getTime()
-                            const hoursDiff = timeDiff / (1000 * 60 * 60)
+                            const inicio = new Date(fechaInicio);
+                            inicio.setSeconds(0, 0);
+
+                            const termino = new Date(value);
+                            termino.setSeconds(0, 0);
+
+                            const timeDiff = termino.getTime() - inicio.getTime();
+                            const hoursDiff = timeDiff / (1000 * 60 * 60);
                             if (hoursDiff < 5) {
                                 return 'La duración no puede ser menor a 5 horas'
                             }

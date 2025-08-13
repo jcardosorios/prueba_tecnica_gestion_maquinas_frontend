@@ -1,5 +1,6 @@
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { format } from "date-fns"
 
 
 export const formatCustomDate = (date) => {
@@ -23,4 +24,8 @@ export const decimalHoursToTime = (decimalHours) => {
 
 export const capitalText = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+}
+
+export const getTimeFromDate = (time) => {
+  return format(time, "HH:mm")
 }
