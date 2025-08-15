@@ -108,7 +108,6 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
 
     // Manejo de formulario
     const handleForm = (data) => {
-        console.log(data)
         if(isEditing){
             const formData = {
                 fecha_hora_termino: new Date(data.fecha_hora_termino.setSeconds(0,0))
