@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { format, setHours, setMinutes, parse } from "date-fns"
+import { format, setHours, setMinutes } from "date-fns"
 import { es } from "date-fns/locale"
 import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query"
 import * as Popover from '@radix-ui/react-popover'
@@ -13,6 +13,7 @@ import { createTarea, updateTarea } from '../../api/tareasService'
 import Calendar  from '../ui/Calendar';
 import { toast } from 'react-toastify'
 import { getTimeFromDate } from '../../utils/utils'
+import DataTimeField from '../ui/DataTimeField'
 
 function TareaCreateForm({ onMutationSuccess, initialData = null }) {
     const [startTimeStr, setStartTimeStr] = useState("")
@@ -50,6 +51,7 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
             const startTime = getTimeFromDate(new Date(initialData?.fecha_hora_inicio)) 
             setStartTimeStr(startTime)
             setEndTimeStr(timeString)
+            setValue("hora_inicio", timeString, { shouldValidate: true, shouldDirty: true })
             setValue("hora_termino", timeString, { shouldValidate: true, shouldDirty: true })
         } else {
             setStartTimeStr(timeString)
@@ -76,7 +78,6 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
 
     // Manejo de cambios en horas
     const handleTimeChange = (field, time) => {
-        console.log(time)
         const [hours, minutes] = time.split(':').map(Number)
         const currentDate = getValues(field)
         const dateToUpdate = currentDate || new Date()
@@ -107,7 +108,7 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
 
     // Manejo de formulario
     const handleForm = (data) => {
-
+        console.log(data)
         if(isEditing){
             const formData = {
                 fecha_hora_termino: new Date(data.fecha_hora_termino.setSeconds(0,0))
@@ -171,52 +172,17 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
                 )}
             </div>
             {/* Fecha inicio */}
-            <div className="flex flex-col">
-                <label 
-                    htmlFor="fecha_hora_inicio" 
-                    className="text-sm font-medium leading-none mb-3"
-                >Fecha y hora de inicio</label>
-                <div className='flex gap-2'>
-                    <Popover.Root 
-                    open={isEditing ? false : openCalendarStart} 
-                    onOpenChange={setOpenCalendarStart}
-                    >
-                        <Popover.Trigger asChild>
-                            <div  id='fecha_hora_inicio' disabled={isEditing} className={twMerge("flex-1 justify-start text-left font-normal h-10 px-4 py-2 bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center whitespace-nowrap rounded-md border border-input text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:bg-muted disabled:text-muted-foreground", !getValues("fecha_hora_inicio") && "text-muted-foreground", isEditing && "bg-muted text-muted-foreground hover:bg-muted hover:text-muted-foreground")}>
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {getValues("fecha_hora_inicio") ? format(getValues("fecha_hora_inicio"), "PPP", { locale: es }) : <span>Elige una fecha</span>}
-                                
-                            </div>
-                        </Popover.Trigger>
-                        <Popover.Portal>
-                            <Popover.Content className="w-auto p-0 z-[1000]" align="start">
-                                <Calendar 
-                                    mode="single" 
-                                    selected={getValues("fecha_hora_inicio")} 
-                                    onSelect={(date) => {
-                                        setValue("fecha_hora_inicio", date, { shouldValidate: true, shouldDirty: true })
-                                        setOpenCalendarStart(false)
-                                    }} 
-                                    initialFocus />
-                            </Popover.Content>
-                        </Popover.Portal>
-                    </Popover.Root>
-                    <input
-                        type="time"
-                        value={startTimeStr}
-                        disabled={isEditing}
-                        onChange={(e) => handleTimeChange('fecha_hora_inicio', e.target.value)}
-                        className="h-10 w-28 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring  disabled:text-muted-foreground disabled:bg-muted "
-                    />
-                    <button 
-                        type="button"
-                        disabled={isEditing}
-                        onClick={(e) => handleClearDate("fecha_hora_inicio", e)}
-                        className="p-1 rounded-full text-muted-foreground hover:bg-muted hover:disabled:bg-background"
-                    >
-                        <Cross2Icon className="h-4 w-4" />
-                    </button>
-                </div>
+            <DataTimeField 
+                date_field="fecha_hora_inicio"
+                openCalendar={openCalendarStart}
+                setOpenCalendar={setOpenCalendarStart}
+                timeStr={startTimeStr}
+                getValues={getValues}
+                setValue={setValue}
+                isEditing={isEditing}
+                handleTimeChange={handleTimeChange}
+                handleClearDate={handleClearDate}
+            >
                 <input type="hidden" {...register("fecha_hora_inicio", {
                     required: 'Es obligatorio seleccionar una fecha de inicio',
                     validate: (value) => {
@@ -238,48 +204,20 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
                 {errors.hora_inicio && (
                     <ErrorMessage>{errors.hora_inicio.message}</ErrorMessage>
                 )}
-            </div>
+            </DataTimeField>
+            
             {/* Fecha termino */}
-            <div className="flex flex-col">
-                <label 
-                    htmlFor="fecha_hora_termino" 
-                    className="text-sm font-medium leading-none mb-3"
-                >Fecha y hora de termino</label>
-                <div className='flex gap-2'>
-                    <Popover.Root  open={openCalendarEnd} onOpenChange={setOpenCalendarEnd}>
-                        <Popover.Trigger asChild>
-                            <button id='fecha_hora_termino' type="button" className={twMerge("flex-1 justify-start text-left font-normal h-10 px-4 py-2 bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center whitespace-nowrap rounded-md border border-input text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", !getValues("fecha_hora_termino") && "text-muted-foreground")}>
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {getValues("fecha_hora_termino") ? format(getValues("fecha_hora_termino"), "PPP", { locale: es }) : <span>Elige una fecha</span>}
-                            </button>
-                        </Popover.Trigger>
-                        <Popover.Portal>
-                            <Popover.Content className="w-auto p-0 z-[1000]" align="start">
-                                <Calendar 
-                                    mode="single" 
-                                    selected={getValues("fecha_hora_termino")} 
-                                    onSelect={(date) => {
-                                        setValue("fecha_hora_termino", date, { shouldValidate: true, shouldDirty: true })
-                                        setOpenCalendarEnd(false)
-                                    }} 
-                                />
-                            </Popover.Content>
-                        </Popover.Portal>
-                    </Popover.Root>
-                    <input
-                        type="time"
-                        value={endTimeStr}
-                        onChange={(e) => handleTimeChange('fecha_hora_termino', e.target.value)}
-                        className="h-10 w-28 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    />
-                    <button 
-                        type="button"
-                        onClick={(e) => handleClearDate("fecha_hora_termino", e)}
-                        className="p-1 rounded-full text-muted-foreground hover:bg-muted"
-                    >
-                        <Cross2Icon className="h-4 w-4" />
-                    </button>
-                </div>
+            <DataTimeField 
+                date_field="fecha_hora_termino"
+                openCalendar={openCalendarEnd}
+                setOpenCalendar={setOpenCalendarEnd}
+                timeStr={endTimeStr}
+                getValues={getValues}
+                setValue={setValue}
+                isEditing={isEditing}
+                handleTimeChange={handleTimeChange}
+                handleClearDate={handleClearDate}
+            >
                 <input type="hidden" {...register("fecha_hora_termino", {
                     validate: (value) => {
                         if (getValues("hora_termino") && !value) {
@@ -307,9 +245,6 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
                         }
                     }
                 })} />
-                {errors.fecha_hora_termino && (
-                    <ErrorMessage>{errors.fecha_hora_termino.message}</ErrorMessage>
-                )}
                 <input type="hidden" {...register("hora_termino", {
                     validate: (value) => {
                         if (getValues("fecha_hora_termino") && !value) {
@@ -317,10 +252,14 @@ function TareaCreateForm({ onMutationSuccess, initialData = null }) {
                         }
                     }
                 })} />
+                {errors.fecha_hora_termino && (
+                    <ErrorMessage>{errors.fecha_hora_termino.message}</ErrorMessage>
+                )}
                 {errors.hora_termino && (
                     <ErrorMessage>{errors.hora_termino.message}</ErrorMessage>
                 )}
-            </div>
+            </DataTimeField>
+        
             <div className='flex justify-end gap-3 mt-4'>
                 <Dialog.Close asChild>
                     <button type='button' className='bg-destructive/80 p-2 rounded-md hover:bg-destructive/90'>

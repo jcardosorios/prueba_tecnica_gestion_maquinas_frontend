@@ -1,12 +1,69 @@
-# React + Vite
+## Descripción del Proyecto
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz visual para visualización de aplicacón web destinada a gestionar el ciclo de producción de máquinas industriales. En la cual cada máquina realiza tareas que generan tiempo de producción. Al completarse 5 tareas con una máquina, esta entra en un periodo de inactividad calculado en el lado del servidor y visualizado en esta aplicación.
 
-Currently, two official plugins are available:
+Esta aplicación consta de 3 vistas:
+- Maquinas: Consta de un CRUD completo que permite la creación, eliminación, visualización y edición de las máquinas y sus coeficientes de trabajo.
+- Tareas: Las tareas pueden unicamente visualizarse, crear nuevas tareas y finalizarlas (edición limitada).
+- Producción: Estas solo pueden ser visualizadas.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Scripts Disponibles
+
+En el directorio del proyecto, puedes ejecutar los siguientes comandos:
+
+- `npm run dev`: Inicia el servidor de desarrollo en `http://localhost:5173`.
+    
+- `npm run build`: Compila la aplicación para producción en la carpeta `dist`.
+    
+- `npm run lint`: Busca problemas de código.
+    
+- `npm run preview`: Previsualiza la compilación de producción.
+    
+
+---
+
+### Instrucciones de Instalación y Ejecución
+
+#### 1\. Clonar el repositorio
+
+Bash
+
+```
+git clone https://github.com/tu-usuario/nombre-del-repo.git
+```
+
+#### 2\. Instalar dependencias
+
+Ve al directorio del proyecto e instala las dependencias:
+
+Bash
+
+```
+cd nombre-del-repo
+npm install
+```
+
+#### 3\. Levantar el servidor
+
+Ejecuta el siguiente comando para iniciar la aplicación en modo de desarrollo:
+
+Bash
+
+```
+npm run dev
+```
+
+La aplicación estará disponible en tu navegador en `http://localhost:5173`.
+
+---
+
+### Prompts de IA usados para dudas comunes (Gemini)
+
+- "How to create a new component in React with Vite?"
+    
+- "How to fetch data from an API in React using `useEffect` and `useState`?"
+    
+- "How to manage state in a React component?"

@@ -40,7 +40,7 @@ function App() {
                 <Tabs.Trigger
                   key={tab.value}
                   value={tab.value}
-                  className="flex-1 py-1 mx-2  rounded-md text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground"
+                  className="flex-1 py-1 mx-2  rounded-md text-muted-foreground cursor-pointer hover:bg-background/70 data-[state=active]:bg-background data-[state=active]:text-foreground"
                 >
                   {tab.name}
                 </Tabs.Trigger>
